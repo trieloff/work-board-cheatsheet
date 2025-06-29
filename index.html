@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Board Keyboard Cheatsheet</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #1a1a1a;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        h1 {
+            margin-bottom: 30px;
+            color: #fff;
+        }
+        
+        .keyboard {
+            display: grid;
+            grid-template-columns: repeat(12, 80px);
+            gap: 8px;
+            background-color: #2a2a2a;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .key {
+            width: 80px;
+            height: 80px;
+            background-color: #000;
+            border: 2px solid #333;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 12px;
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .key:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+        
+        .key.wide {
+            grid-column: span 2;
+            width: calc(160px + 8px);
+        }
+        
+        .key.modifier {
+            background-color: #000;
+        }
+        
+        .key.modifier.purple {
+            background-color: #9b59b6;
+            border-color: #9b59b6;
+            color: #fff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .key.modifier.purple .key-icon,
+        .key.modifier.purple .key-combo {
+            color: #fff;
+        }
+        
+        .key.modifier.light-blue {
+            background-color: #3498db;
+            border-color: #3498db;
+            color: #fff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .key.modifier.light-blue .key-icon,
+        .key.modifier.light-blue .key-combo {
+            color: #fff;
+        }
+        
+        .key.green {
+            background-color: #27ae60;
+            color: #fff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .key.green .key-icon,
+        .key.green .key-combo {
+            color: #fff;
+        }
+        
+        .key.red {
+            background-color: #e74c3c;
+            color: #fff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .key.red .key-icon,
+        .key.red .key-combo {
+            color: #fff;
+        }
+        
+        .key.return {
+            position: relative;
+        }
+        
+        .key.return::before,
+        .key.return::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background-color: #fff;
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .key.return::before {
+            left: 30%;
+        }
+        
+        .key.return::after {
+            right: 30%;
+        }
+        
+        .key-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+        
+        .key-label {
+            font-size: 10px;
+            text-align: center;
+            line-height: 1.2;
+            max-width: 70px;
+            word-wrap: break-word;
+        }
+        
+        .key-combo {
+            font-size: 9px;
+            color: #888;
+            margin-top: 2px;
+        }
+        
+        .legend {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 1000px;
+        }
+        
+        .legend-section {
+            background-color: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .legend-section h3 {
+            margin-top: 0;
+            color: #fff;
+            border-bottom: 2px solid #444;
+            padding-bottom: 10px;
+        }
+        
+        .legend-item {
+            margin: 8px 0;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .legend-key {
+            background-color: #000;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            min-width: 80px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Work Board Keyboard Layout</h1>
+    
+    <div class="keyboard" id="keyboard">
+        <!-- Keys will be generated by JavaScript -->
+    </div>
+    
+    <div class="legend">
+        <div class="legend-section">
+            <h3>Keynote Shortcuts</h3>
+            <div id="keynote-shortcuts"></div>
+        </div>
+        <div class="legend-section">
+            <h3>IDE Shortcuts</h3>
+            <div id="ide-shortcuts"></div>
+        </div>
+        <div class="legend-section">
+            <h3>Modifier Keys</h3>
+            <div id="modifier-keys"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Dvorak to QWERTY mapping
+        const dvorakToQwerty = {
+            'A': 'A', 'B': 'N', 'C': 'I', 'D': 'H', 'E': 'D', 'F': 'Y', 'G': 'U', 'H': 'J',
+            'I': 'G', 'J': 'C', 'K': 'V', 'L': 'P', 'M': 'M', 'N': 'L', 'O': 'S', 'P': 'R',
+            'Q': 'X', 'R': 'O', 'S': 'SCLN', 'T': 'K', 'U': 'F', 'V': 'DOT', 'W': 'COMM',
+            'X': 'B', 'Y': 'T', 'Z': 'SLSH',
+            'SCLN': 'Z', 'COMM': 'W', 'DOT': 'E', 'SLSH': 'LBRC', 'LBRC': 'MINS', 'RBRC': 'EQL',
+            'MINS': 'QUOT', 'EQL': 'RBRC', 'QUOT': 'Q'
+        };
+        
+        // Key definitions with positions and properties
+        const keyDefinitions = [
+            // Row 1
+            { row: 1, col: 1, code: "C(S(KC_I))", label: "Center", icon: "align-horizontal-space-around", section: "keynote" },
+            { row: 1, col: 2, code: "C(S(KC_M))", label: "Middle", icon: "align-vertical-justify-center", section: "keynote" },
+            { row: 1, col: 3, code: "G(KC_H)", label: "Duplicate", icon: "pencil", section: "keynote" },
+            { row: 1, col: 4, code: "KC_LCTL", label: "Ctrl", modifier: true, color: "purple" },
+            { row: 1, col: 5, code: "LSG(KC_H)", label: "Show Hidden", icon: "eye", section: "ide" },
+            { row: 1, col: 6, code: "KC_F10", label: "F10", icon: "function-square", section: "ide" },
+            { row: 1, col: 7, code: "KC_F11", label: "F11", icon: "function-square", section: "ide" },
+            { row: 1, col: 8, code: "LAG(KC_P)", label: "Project", icon: "folder-open", section: "ide" },
+            { row: 1, col: 9, code: "KC_RCTL", label: "Ctrl", modifier: true, color: "purple" },
+            { row: 1, col: 10, code: "LCAG(KC_F)", label: "Format", icon: "align-left", section: "keynote" },
+            { row: 1, col: 11, code: "LCAG(KC_G)", label: "Group", icon: "group", section: "keynote" },
+            { row: 1, col: 12, code: "LCAG(KC_SCLN)", label: "Special", icon: "star", section: "keynote" },
+            
+            // Row 2
+            { row: 2, col: 1, code: "C(S(KC_N))", label: "Bottom", icon: "align-end-horizontal", section: "keynote" },
+            { row: 2, col: 2, code: "C(S(KC_K))", label: "Top", icon: "align-start-horizontal", section: "keynote" },
+            { row: 2, col: 3, code: "C(S(KC_J))", label: "Horizontally", icon: "align-center-horizontal", section: "keynote" },
+            { row: 2, col: 4, code: "KC_LALT", label: "Alt", modifier: true, color: "light-blue" },
+            { row: 2, col: 5, code: "C(S(KC_U))", label: "Upload", icon: "upload", section: "ide" },
+            { row: 2, col: 6, code: "G(KC_T)", label: "Tab", icon: "tabs", section: "ide", color: "green" },
+            { row: 2, col: 7, code: "G(KC_L)", label: "Go to Line", icon: "hash", section: "ide", color: "red" },
+            { row: 2, col: 8, code: "G(KC_LBRC)", label: "Back", icon: "arrow-left", section: "ide" },
+            { row: 2, col: 9, code: "KC_RALT", label: "Alt", modifier: true, color: "light-blue" },
+            { row: 2, col: 10, code: "LSG(KC_P)", label: "Presenter", icon: "presentation", section: "keynote" },
+            { row: 2, col: 11, code: "LAG(KC_I)", label: "Inspector", icon: "info", section: "keynote" },
+            { row: 2, col: 12, code: "KC_LALT", label: "Alt", icon: "command", section: "keynote" },
+            
+            // Row 3
+            { row: 3, col: 1, code: "C(S(KC_P))", label: "Left", icon: "align-start-vertical", section: "keynote" },
+            { row: 3, col: 2, code: "C(S(KC_O))", label: "Right", icon: "align-end-vertical", section: "keynote" },
+            { row: 3, col: 3, code: "C(S(KC_DOT))", label: "Vertically", icon: "align-center-vertical", section: "keynote" },
+            { row: 3, col: 4, code: "KC_LGUI", label: "Cmd", modifier: true, color: "light-blue" },
+            { row: 3, col: 5, code: "LSG(KC_D)", label: "Duplicate", icon: "copy", section: "ide" },
+            { row: 3, col: 6, code: "LSG(KC_Y)", label: "Type Info", icon: "file-type", section: "ide" },
+            { row: 3, col: 7, code: "G(KC_C)", label: "Copy", icon: "copy", section: "ide" },
+            { row: 3, col: 8, code: "G(KC_V)", label: "Paste", icon: "clipboard", section: "ide" },
+            { row: 3, col: 9, code: "KC_RGUI", label: "Cmd", modifier: true, color: "light-blue" },
+            { row: 3, col: 10, code: "LAG(KC_U)", label: "Underline", icon: "underline", section: "keynote" },
+            { row: 3, col: 11, code: "LAG(KC_DOT)", label: "Style", icon: "palette", section: "keynote" },
+            { row: 3, col: 12, code: "KC_LSFT", label: "Shift", icon: "arrow-up", section: "keynote" },
+            
+            // Row 4
+            { row: 4, col: 1, code: "LAG(KC_N)", label: "Send Backward", icon: "arrow-down", section: "keynote" },
+            { row: 4, col: 2, code: "LAG(KC_Y)", label: "Bring Forward", icon: "arrow-up", section: "keynote" },
+            { row: 4, col: 3, code: "KC_ENT", label: "", isReturn: true, section: "keynote" },
+            { row: 4, col: 4, code: "KC_LSFT", label: "Shift", modifier: true, color: "purple" },
+            { row: 4, col: 5, code: "G(KC_N)", label: "New", icon: "file-plus", section: "ide" },
+            { row: 4, col: 6, code: "LSG(KC_R)", label: "Cmd Palette", icon: "command", wide: true, section: "ide" },
+            { row: 4, col: 8, code: "LAG(KC_N)", label: "Navigate", icon: "compass", section: "ide" },
+            { row: 4, col: 9, code: "KC_RSFT", label: "Shift", modifier: true, color: "purple" },
+            { row: 4, col: 10, code: "KC_ENT", label: "", isReturn: true, section: "keynote" },
+            { row: 4, col: 11, code: "G(KC_P)", label: "Print", icon: "printer", section: "keynote" },
+            { row: 4, col: 12, code: "LAG(KC_P)", label: "Unlock", icon: "unlock", section: "keynote" }
+        ];
+        
+        // Parse key code to human readable format
+        function parseKeyCode(code) {
+            if (!code || code === "KC_NO") return "";
+            
+            const modifiers = [];
+            let key = code;
+            
+            // Extract modifiers
+            if (key.includes("LCAG(") || key.includes("LAG(") || key.includes("LSG(") || key.includes("C(") || key.includes("G(") || key.includes("A(") || key.includes("S(")) {
+                if (key.includes("LCAG(")) {
+                    modifiers.push("⌃", "⌥", "⌘");
+                    key = key.replace("LCAG(", "").replace(")", "");
+                } else if (key.includes("LAG(")) {
+                    modifiers.push("⌥", "⌘");
+                    key = key.replace("LAG(", "").replace(")", "");
+                } else if (key.includes("LSG(")) {
+                    modifiers.push("⇧", "⌘");
+                    key = key.replace("LSG(", "").replace(")", "");
+                } else {
+                    while (key.includes("(")) {
+                        if (key.startsWith("C(")) {
+                            modifiers.push("⌃");
+                            key = key.replace("C(", "");
+                        } else if (key.startsWith("G(")) {
+                            modifiers.push("⌘");
+                            key = key.replace("G(", "");
+                        } else if (key.startsWith("A(")) {
+                            modifiers.push("⌥");
+                            key = key.replace("A(", "");
+                        } else if (key.startsWith("S(")) {
+                            modifiers.push("⇧");
+                            key = key.replace("S(", "");
+                        }
+                        key = key.substring(0, key.lastIndexOf(")"));
+                    }
+                }
+            }
+            
+            // Convert key name
+            key = key.replace("KC_", "");
+            
+            // Apply Dvorak to QWERTY conversion if needed
+            if (dvorakToQwerty[key]) {
+                key = dvorakToQwerty[key];
+            }
+            
+            // Convert special keys
+            const keyMap = {
+                'LCTL': '⌃', 'RCTL': '⌃', 'LALT': '⌥', 'RALT': '⌥',
+                'LGUI': '⌘', 'RGUI': '⌘', 'LSFT': '⇧', 'RSFT': '⇧',
+                'ENT': '⏎', 'SPC': '␣', 'LBRC': '[', 'RBRC': ']',
+                'SCLN': ';', 'QUOT': "'", 'COMM': ',', 'DOT': '.',
+                'SLSH': '/', 'MINS': '-', 'EQL': '='
+            };
+            
+            if (keyMap[key]) {
+                key = keyMap[key];
+            }
+            
+            return modifiers.join("") + key;
+        }
+        
+        // Create keyboard layout
+        function createKeyboard() {
+            const keyboard = document.getElementById('keyboard');
+            const keynoteShortcuts = document.getElementById('keynote-shortcuts');
+            const ideShortcuts = document.getElementById('ide-shortcuts');
+            const modifierKeys = document.getElementById('modifier-keys');
+            
+            keyDefinitions.forEach(keyDef => {
+                const keyElement = document.createElement('div');
+                keyElement.className = 'key';
+                
+                // Add special classes
+                if (keyDef.modifier) {
+                    keyElement.classList.add('modifier', keyDef.color);
+                }
+                if (keyDef.wide) {
+                    keyElement.classList.add('wide');
+                }
+                if (keyDef.color && !keyDef.modifier) {
+                    keyElement.classList.add(keyDef.color);
+                }
+                if (keyDef.isReturn) {
+                    keyElement.classList.add('return');
+                }
+                
+                // Set grid position
+                keyElement.style.gridRow = keyDef.row;
+                keyElement.style.gridColumn = keyDef.col;
+                
+                // Add content
+                if (!keyDef.isReturn && keyDef.label) {
+                    const iconElement = document.createElement('i');
+                    if (keyDef.icon) {
+                        iconElement.setAttribute('data-lucide', keyDef.icon);
+                        iconElement.className = 'key-icon';
+                        keyElement.appendChild(iconElement);
+                    }
+                    
+                    const labelElement = document.createElement('div');
+                    labelElement.className = 'key-label';
+                    labelElement.textContent = keyDef.label;
+                    keyElement.appendChild(labelElement);
+                    
+                    const comboElement = document.createElement('div');
+                    comboElement.className = 'key-combo';
+                    comboElement.textContent = parseKeyCode(keyDef.code);
+                    keyElement.appendChild(comboElement);
+                }
+                
+                keyboard.appendChild(keyElement);
+                
+                // Add to legend
+                if (keyDef.label && !keyDef.modifier && keyDef.code !== "KC_NO") {
+                    const legendItem = document.createElement('div');
+                    legendItem.className = 'legend-item';
+                    
+                    const legendKey = document.createElement('span');
+                    legendKey.className = 'legend-key';
+                    legendKey.textContent = parseKeyCode(keyDef.code);
+                    
+                    const legendLabel = document.createElement('span');
+                    legendLabel.textContent = keyDef.label;
+                    
+                    legendItem.appendChild(legendKey);
+                    legendItem.appendChild(legendLabel);
+                    
+                    if (keyDef.section === 'keynote') {
+                        keynoteShortcuts.appendChild(legendItem);
+                    } else if (keyDef.section === 'ide') {
+                        ideShortcuts.appendChild(legendItem);
+                    }
+                }
+                
+                // Add modifier keys to legend
+                if (keyDef.modifier) {
+                    const legendItem = document.createElement('div');
+                    legendItem.className = 'legend-item';
+                    
+                    const legendKey = document.createElement('span');
+                    legendKey.className = 'legend-key';
+                    legendKey.style.borderColor = keyDef.color === 'purple' ? '#9b59b6' : '#3498db';
+                    legendKey.textContent = parseKeyCode(keyDef.code);
+                    
+                    const legendLabel = document.createElement('span');
+                    legendLabel.textContent = `${keyDef.label} (${keyDef.color})`;
+                    
+                    legendItem.appendChild(legendKey);
+                    legendItem.appendChild(legendLabel);
+                    
+                    if (!Array.from(modifierKeys.children).some(child => 
+                        child.querySelector('.legend-key').textContent === legendKey.textContent)) {
+                        modifierKeys.appendChild(legendItem);
+                    }
+                }
+            });
+            
+            // Initialize Lucide icons
+            lucide.createIcons();
+        }
+        
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', createKeyboard);
+    </script>
+</body>
+</html>
