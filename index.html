@@ -186,9 +186,9 @@
             { row: 1, col: 7, code: "KC_F11", label: "Step Into", icon: "picture-in-picture", section: "ide" },
             { row: 1, col: 8, code: "LAG(KC_P)", label: "Go to Line #", icon: "house", section: "ide" },
             { row: 1, col: 9, code: "KC_RCTL", label: "Ctrl", modifier: true, color: "purple" },
-            { row: 1, col: 10, code: "LCAG(KC_F)", label: "Format", icon: "align-left", section: "keynote" },
-            { row: 1, col: 11, code: "LCAG(KC_G)", label: "Group", icon: "group", section: "keynote" },
-            { row: 1, col: 12, code: "LCAG(KC_SCLN)", label: "Special", icon: "star", section: "keynote" },
+            { row: 1, col: 10, code: "LCAG(KC_F)", label: "Unite", icon: "squares-unite", section: "keynote" },
+            { row: 1, col: 11, code: "LCAG(KC_G)", label: "Intersect", icon: "squares-intersect", section: "keynote" },
+            { row: 1, col: 12, code: "LCAG(KC_SCLN)", label: "Subtract", icon: "squares-subtract", section: "keynote" },
             
             // Row 2
             { row: 2, col: 1, code: "C(S(KC_N))", label: "Bottom", icon: "align-end-horizontal", section: "keynote" },
@@ -200,9 +200,9 @@
             { row: 2, col: 7, code: "G(KC_L)", label: "Reject", icon: "x", section: "ide", color: "red" },
             { row: 2, col: 8, code: "G(KC_LBRC)", label: "Comment", customIcon: "wrk", section: "ide" },
             { row: 2, col: 9, code: "KC_RALT", label: "Alt", modifier: true, color: "light-blue" },
-            { row: 2, col: 10, code: "LSG(KC_P)", label: "Presenter", icon: "presentation", section: "keynote" },
-            { row: 2, col: 11, code: "LAG(KC_I)", label: "Inspector", icon: "info", section: "keynote" },
-            { row: 2, col: 12, code: "KC_LALT", label: "Alt", icon: "command", section: "keynote" },
+            { row: 2, col: 10, code: "LSG(KC_P)", label: "Object List", icon: "eye", section: "keynote" },
+            { row: 2, col: 11, code: "LAG(KC_I)", label: "Copy Style", icon: "pipette", section: "keynote" },
+            { row: 2, col: 12, code: "KC_LALT", label: "Option", customIcon: "dot", section: "keynote" },
             
             // Row 3
             { row: 3, col: 1, code: "C(S(KC_P))", label: "Left", icon: "align-start-vertical", section: "keynote" },
@@ -214,12 +214,12 @@
             { row: 3, col: 7, code: "G(KC_C)", label: "Terminal", icon: "square", section: "ide" },
             { row: 3, col: 8, code: "G(KC_V)", label: "AI Agent", icon: "message-circle", section: "ide" },
             { row: 3, col: 9, code: "KC_RGUI", label: "Cmd", modifier: true, color: "light-blue" },
-            { row: 3, col: 10, code: "LAG(KC_U)", label: "Underline", icon: "underline", section: "keynote" },
-            { row: 3, col: 11, code: "LAG(KC_DOT)", label: "Style", icon: "palette", section: "keynote" },
-            { row: 3, col: 12, code: "KC_LSFT", label: "Shift", icon: "arrow-up", section: "keynote" },
+            { row: 3, col: 10, code: "LAG(KC_U)", label: "Group", icon: "square", section: "keynote" },
+            { row: 3, col: 11, code: "LAG(KC_DOT)", label: "Paste Style", icon: "pencil", section: "keynote" },
+            { row: 3, col: 12, code: "KC_LSFT", label: "Shift", customIcon: "dot", section: "keynote" },
             
             // Row 4
-            { row: 4, col: 1, code: "LAG(KC_N)", label: "Send Backward", icon: "arrow-down", section: "keynote" },
+            { row: 4, col: 1, code: "LAG(KC_N)", label: "Backward", icon: "arrow-down", section: "keynote" },
             { row: 4, col: 2, code: "LAG(KC_Y)", label: "Bring Forward", icon: "arrow-up", section: "keynote" },
             { row: 4, col: 3, code: "KC_ENT", label: "", isReturn: true, section: "keynote" },
             { row: 4, col: 4, code: "KC_LSFT", label: "Shift", modifier: true, color: "purple" },
@@ -228,8 +228,8 @@
             { row: 4, col: 8, code: "LAG(KC_N)", label: "Panel Right", icon: "panel-right", section: "ide" },
             { row: 4, col: 9, code: "KC_RSFT", label: "Shift", modifier: true, color: "purple" },
             { row: 4, col: 10, code: "KC_ENT", label: "", isReturn: true, section: "keynote" },
-            { row: 4, col: 11, code: "G(KC_P)", label: "Print", icon: "printer", section: "keynote" },
-            { row: 4, col: 12, code: "LAG(KC_P)", label: "Unlock", icon: "unlock", section: "keynote" }
+            { row: 4, col: 11, code: "G(KC_P)", label: "Lock", icon: "lock-keyhole", section: "keynote" },
+            { row: 4, col: 12, code: "LAG(KC_P)", label: "Unlock", icon: "lock", section: "keynote" }
         ];
         
         // Parse key code to human readable format
@@ -333,6 +333,13 @@
                             iconElement.style.height = '12px';
                             iconElement.style.backgroundColor = '#fff';
                             iconElement.style.borderRadius = '6px';
+                            iconElement.style.margin = '6px auto';
+                        } else if (keyDef.customIcon === 'dot') {
+                            // Create white dot with same radius as bar height
+                            iconElement.style.width = '12px';
+                            iconElement.style.height = '12px';
+                            iconElement.style.backgroundColor = '#fff';
+                            iconElement.style.borderRadius = '50%';
                             iconElement.style.margin = '6px auto';
                         } else {
                             // Custom text icon
