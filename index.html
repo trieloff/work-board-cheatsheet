@@ -156,6 +156,7 @@
             font-size: 9px;
             color: #888;
             margin-top: 2px;
+            text-transform: uppercase;
         }
         
     </style>
@@ -169,14 +170,16 @@
     
     
     <script>
-        // Dvorak to QWERTY mapping
-        const dvorakToQwerty = {
-            'A': 'A', 'B': 'N', 'C': 'I', 'D': 'H', 'E': 'D', 'F': 'Y', 'G': 'U', 'H': 'J',
-            'I': 'G', 'J': 'C', 'K': 'V', 'L': 'P', 'M': 'M', 'N': 'L', 'O': 'S', 'P': 'R',
-            'Q': 'X', 'R': 'O', 'S': 'SCLN', 'T': 'K', 'U': 'F', 'V': 'DOT', 'W': 'COMM',
-            'X': 'B', 'Y': 'T', 'Z': 'SLSH',
-            'SCLN': 'Z', 'COMM': 'W', 'DOT': 'E', 'SLSH': 'LBRC', 'LBRC': 'MINS', 'RBRC': 'EQL',
-            'MINS': 'QUOT', 'EQL': 'RBRC', 'QUOT': 'Q'
+        // QWERTY to Dvorak mapping (QMK key-code -> Dvorak output)
+        const qwertyToDvorak = {
+            'Q': "'", 'W': ',', 'E': '.', 'R': 'p', 'T': 'y',
+            'Y': 'f', 'U': 'g', 'I': 'c', 'O': 'r', 'P': 'l',
+            'A': 'a', 'S': 'o', 'D': 'e', 'F': 'u', 'G': 'i',
+            'H': 'd', 'J': 'h', 'K': 't', 'L': 'n', 'SCLN': 's',
+            'QUOT': '-', 'Z': ';', 'X': 'q', 'C': 'j', 'V': 'k',
+            'B': 'x', 'N': 'b', 'M': 'm', 'COMM': 'w', 'DOT': 'v',
+            'SLSH': 'z', 'MINS': '[', 'EQL': ']', 'LBRC': '/', 'RBRC': '=',
+            'BSLS': '\\'
         };
         
         // Key definitions with positions and properties
@@ -278,9 +281,9 @@
             // Convert key name
             key = key.replace("KC_", "");
             
-            // Apply Dvorak to QWERTY conversion if needed
-            if (dvorakToQwerty[key]) {
-                key = dvorakToQwerty[key];
+            // Apply QWERTY to Dvorak conversion (since codes are QWERTY but OS receives Dvorak)
+            if (qwertyToDvorak[key]) {
+                key = qwertyToDvorak[key];
             }
             
             // Convert special keys
